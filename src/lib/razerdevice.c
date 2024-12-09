@@ -179,6 +179,7 @@ bool is_mouse_mat(IOUSBDeviceInterface **usb_dev)
 	case USB_DEVICE_ID_RAZER_FIREFLY_HYPERFLUX:
 	case USB_DEVICE_ID_RAZER_FIREFLY:
 	case USB_DEVICE_ID_RAZER_FIREFLY_V2:
+	case USB_DEVICE_ID_RAZER_FIREFLY_V2_PRO:
 	case USB_DEVICE_ID_RAZER_GOLIATHUS_CHROMA:
 	case USB_DEVICE_ID_RAZER_GOLIATHUS_CHROMA_EXTENDED:
 		return true;
@@ -202,12 +203,12 @@ bool is_egpu(IOUSBDeviceInterface **usb_dev)
 }
 
 
-bool is_headphone(IOUSBDeviceInterface **usb_dev) 
+bool is_headphone(IOUSBDeviceInterface **usb_dev)
 {
     UInt16 product = -1;
     (*usb_dev)->GetDeviceProduct(usb_dev, &product);
 
-    switch (product) 
+    switch (product)
     {
         case USB_DEVICE_ID_RAZER_KRAKEN_KITTY_EDITION:
         case USB_DEVICE_ID_RAZER_KRAKEN_V2:
@@ -233,6 +234,7 @@ bool is_accessory(IOUSBDeviceInterface **usb_dev)
         case USB_DEVICE_ID_RAZER_MOUSE_BUNGEE_V3_CHROMA:
         case USB_DEVICE_ID_RAZER_BASE_STATION_V2_CHROMA:
         case USB_DEVICE_ID_RAZER_THUNDERBOLT_4_DOCK_CHROMA:
+        case USB_DEVICE_ID_RAZER_CHARGING_PAD_CHROMA:
             return true;
     }
 
