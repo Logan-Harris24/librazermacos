@@ -38,7 +38,7 @@ ssize_t razer_accessory_attr_write_mode_wave(IOUSBDeviceInterface **usb_dev, con
 ssize_t razer_accessory_attr_write_mode_static(IOUSBDeviceInterface **usb_dev, const char *buf, size_t count);
 ssize_t razer_accessory_attr_write_mode_breath(IOUSBDeviceInterface **usb_dev, const char *buf, size_t count);
 ushort razer_accessory_attr_read_set_brightness(IOUSBDeviceInterface **usb_dev);
-ssize_t razer_accessory_attr_write_set_brightness(IOUSBDeviceInterface **usb_dev, ushort brightness, size_t count);
+ssize_t razer_accessory_attr_write_set_brightness(IOUSBDeviceInterface **usb_dev, ushort brightness, int count);
 
 
 #endif
