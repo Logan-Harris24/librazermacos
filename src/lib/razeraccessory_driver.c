@@ -548,6 +548,8 @@ ushort razer_accessory_attr_read_set_brightness(IOUSBDeviceInterface **usb_dev)
         case USB_DEVICE_ID_RAZER_BASE_STATION_V2_CHROMA:
         case USB_DEVICE_ID_RAZER_THUNDERBOLT_4_DOCK_CHROMA:
         case USB_DEVICE_ID_RAZER_MOUSE_DOCK:
+        case USB_DEVICE_ID_RAZER_CHARGING_PAD_CHROMA:
+            brightness = 0xff; // Unfortunately, we can't read the brightness from the device directly. return dummy value.
             break;
 
         default:
@@ -556,5 +558,6 @@ ushort razer_accessory_attr_read_set_brightness(IOUSBDeviceInterface **usb_dev)
             break;
     }
 
+    brightness = round(brightness / 2.55);
     return brightness;
 }
