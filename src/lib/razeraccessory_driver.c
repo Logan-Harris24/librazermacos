@@ -260,9 +260,12 @@ ssize_t razer_accessory_attr_write_mode_static(IOUSBDeviceInterface **usb_dev, c
             case USB_DEVICE_ID_RAZER_NOMMO_PRO:
             case USB_DEVICE_ID_RAZER_NOMMO_CHROMA:
             case USB_DEVICE_ID_RAZER_MOUSE_DOCK:
-            case USB_DEVICE_ID_RAZER_CHARGING_PAD_CHROMA:
                 report = razer_chroma_extended_matrix_effect_static(VARSTORE, ZERO_LED, (struct razer_rgb*) & buf[0]);
                 report.transaction_id.id = 0x3F;
+                break;
+
+            case USB_DEVICE_ID_RAZER_CHARGING_PAD_CHROMA:
+                report = razer_chroma_extended_matrix_effect_static(NOSTORE, ZERO_LED, (struct razer_rgb *)&buf[0]);
                 break;
 
             case USB_DEVICE_ID_RAZER_MOUSE_BUNGEE_V3_CHROMA:
