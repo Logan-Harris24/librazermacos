@@ -493,11 +493,12 @@ ssize_t razer_accessory_attr_read_device_mode(IOUSBDeviceInterface **usb_dev, ch
  *
  * Sets the brightness to the ASCII number written to this file.
  */
-ssize_t razer_accessory_attr_write_set_brightness(IOUSBDeviceInterface **usb_dev, ushort brightness, size_t count)
+ssize_t razer_accessory_attr_write_set_brightness(IOUSBDeviceInterface **usb_dev, ushort brightness, int count)
 {
+
+    struct razer_report report = {0};
     UInt16 product = -1;
     (*usb_dev)->GetDeviceProduct(usb_dev, &product);
-    struct razer_report report = {0};
 
     switch (product) {
         case USB_DEVICE_ID_RAZER_MOUSE_BUNGEE_V3_CHROMA:
@@ -537,11 +538,13 @@ ssize_t razer_accessory_attr_write_set_brightness(IOUSBDeviceInterface **usb_dev
  */
 ushort razer_accessory_attr_read_set_brightness(IOUSBDeviceInterface **usb_dev)
 {
+    bool is_matrix_brightness = false;
+    unsigned char brightness = 0;
+    struct razer_report report = {0};
+    struct razer_report response = {0};
+
     UInt16 product = -1;
     (*usb_dev)->GetDeviceProduct(usb_dev, &product);
-    struct razer_report report = razer_chroma_standard_get_led_brightness(VARSTORE, BACKLIGHT_LED);
-    struct razer_report response = {0};
-    unsigned char brightness = 0;
 
     switch (product) {
         case USB_DEVICE_ID_RAZER_MOUSE_BUNGEE_V3_CHROMA:
@@ -549,15 +552,22 @@ ushort razer_accessory_attr_read_set_brightness(IOUSBDeviceInterface **usb_dev)
         case USB_DEVICE_ID_RAZER_THUNDERBOLT_4_DOCK_CHROMA:
         case USB_DEVICE_ID_RAZER_MOUSE_DOCK:
         case USB_DEVICE_ID_RAZER_CHARGING_PAD_CHROMA:
-            brightness = 0xff; // Unfortunately, we can't read the brightness from the device directly. return dummy value.
-            break;
+          report = razer_chroma_extended_matrix_get_brightness(VARSTORE, ZERO_LED);
+          report.transaction_id.id = 0x1F;
+          is_matrix_brightness = true;
+          break;
 
         default:
-            response = razer_send_payload(usb_dev, &report);
-            brightness = response.arguments[2];
+            report = razer_chroma_standard_get_led_brightness(VARSTORE, BACKLIGHT_LED);
             break;
     }
 
-    brightness = round(brightness / 2.55);
+    response = razer_send_payload(usb_dev, &report);
+    brightness = response.arguments[2];
+
+    if(is_matrix_brightness) {
+        brightness = round(brightness / 2.55);
+    }
+
     return brightness;
 }
